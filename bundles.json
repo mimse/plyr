@@ -7,7 +7,14 @@
             "plyr.css":     ["src/scss/plyr.scss"]
         },
         "js": {
-            "plyr.js":      ["src/js/plyr.js"]
+            "plyr_all.js":  ["src/js/plyr.js",
+                             "src/js/core.js", 
+                             "src/js/embeds/embeds.js",
+                             "src/js/embeds/youtube.js", 
+                             "src/js/embeds/vimeo.js",
+                             "src/js/embeds/soundcloud.js"],
+            "plyr.js":      ["src/js/plyr.js",
+                             "src/js/core.js"]
         }
     },
     "demo": {

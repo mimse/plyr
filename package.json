@@ -22,7 +22,8 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "run-sequence": "^1.1.5",
-    "through2": "^2.0.1"
+    "through2": "^2.0.1",
+    "http-server": "^0.9.0"
   },
   "keywords": [
     "HTML5 Video",
@@ -45,7 +46,8 @@
     "doc": "readme.md"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "http-server -p 9001 ./demo/ ./dist"
   },
   "author": "Sam Potts <sam@selz.com>"
 }

@@ -103,7 +103,6 @@ var build = {
             (function(key) {
                 var name = "js-" + key;
                 tasks.js.push(name);
-
                 gulp.task(name, function () {
                     return gulp
                         .src(bundles[bundle].js[key])
@@ -188,6 +187,12 @@ gulp.task("js", function(){
     run(tasks.js);
 });
 
+gulp.task("cpPlyrToDemoDist", function() {
+    return gulp
+            .src(path.join(paths.plyr.output, "*.*"))
+            .pipe(gulp.dest(paths.demo.output));
+});
+
 // Build SCSS (for testing, default is LESS)
 gulp.task("scss", function(){
     run(tasks.scss);
@@ -208,7 +213,12 @@ gulp.task("watch", function () {
 
 // Default gulp task
 gulp.task("default", function(){
-    run(tasks.js, tasks.less, tasks.sprite, "watch");
+    run(tasks.js, tasks.less, tasks.sprite, "cpPlyrToDemoDist", "watch");
+});
+
+// Build gulp task
+gulp.task("build", function(){
+    run(tasks.js, tasks.less, tasks.sprite, "cpPlyrToDemoDist");
 });
 
 // Publish a version to CDN and demo
