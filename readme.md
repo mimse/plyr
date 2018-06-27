@@ -51,6 +51,10 @@ Some awesome folks have made plugins for CMSs and Components for JavaScript fram
 
 Here's a quick run through on getting up and running. There's also a [demo on Codepen](http://codepen.io/sampotts/pen/jARJYp). You can grab all of the source with [NPM](https://www.npmjs.com/package/plyr) using `npm install plyr`.
 
+### Try Plyr online
+
+You can try Plyr in Codepen using our minimal templates: [HTML5 video](https://codepen.io/pen?template=bKeqpr), [HTML5 audio](https://codepen.io/pen?template=rKLywR), [YouTube](https://codepen.io/pen?template=GGqbbJ), [Vimeo](https://codepen.io/pen?template=bKeXNq). For Streaming we also have example integrations with: [Dash.js](https://codepen.io/pen?template=zaBgBy), [Hls.js](https://codepen.io/pen?template=oyLKQb) and [Shaka Player](https://codepen.io/pen?template=ZRpzZO)
+
 ### HTML
 
 Plyr extends upon the standard [HTML5 media element](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement) markup so that's all you need for those types.
@@ -128,13 +132,13 @@ See [initialising](#initialising) for more information on advanced setups.
 You can use our CDN (provided by [Fastly](https://www.fastly.com/)) for the JavaScript. There's 2 versions; one with and one without [polyfills](#polyfills). My recommendation would be to manage polyfills seperately as part of your application but to make life easier you can use the polyfilled build.
 
 ```html
-<script src="https://cdn.plyr.io/3.3.7/plyr.js"></script>
+<script src="https://cdn.plyr.io/3.3.20/plyr.js"></script>
 ```
 
 ...or...
 
 ```html
-<script src="https://cdn.plyr.io/3.3.7/plyr.polyfilled.js"></script>
+<script src="https://cdn.plyr.io/3.3.20/plyr.polyfilled.js"></script>
 ```
 
 ### CSS
@@ -148,13 +152,13 @@ Include the `plyr.css` stylsheet into your `<head>`
 If you want to use our CDN (provided by [Fastly](https://www.fastly.com/)) for the default CSS, you can use the following:
 
 ```html
-<link rel="stylesheet" href="https://cdn.plyr.io/3.3.7/plyr.css">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.3.20/plyr.css">
 ```
 
 ### SVG Sprite
 
 The SVG sprite is loaded automatically from our CDN (provided by [Fastly](https://www.fastly.com/)). To change this, see the [options](#options) below. For
-reference, the CDN hosted SVG sprite can be found at `https://cdn.plyr.io/3.3.7/plyr.svg`.
+reference, the CDN hosted SVG sprite can be found at `https://cdn.plyr.io/3.3.20/plyr.svg`.
 
 ## Ads
 
@@ -211,7 +215,7 @@ You can specify a range of arguments for the constructor to use:
 
 *   A CSS string selector that's compatible with [`querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector)
 *   A [`HTMLElement`](https://developer.mozilla.org/en/docs/Web/API/HTMLElement)
-*   A [`NodeList]`(https://developer.mozilla.org/en-US/docs/Web/API/NodeList)
+*   A [`NodeList`](https://developer.mozilla.org/en-US/docs/Web/API/NodeList)
 *   A [jQuery](https://jquery.com) object
 
 _Note_: If a `NodeList`, `Array`, or jQuery object are passed, the first element will be used for setup. To setup multiple players, see [setting up multiple players](#setting-up-multiple-players) below.
@@ -282,7 +286,7 @@ Note the single quotes encapsulating the JSON and double quotes on the object ke
 | `debug`              | Boolean                    | `false`                                                                                                                        | Display debugging information in the console                                                                                                                                                                                                                                                                                                                           |
 | `controls`           | Array, Function or Element | `['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen']` | If a function is passed, it is assumed your method will return either an element or HTML string for the controls. Three arguments will be passed to your function; `id` (the unique id for the player), `seektime` (the seektime step in seconds), and `title` (the media title). See [controls.md](controls.md) for more info on how the html needs to be structured. |
 | `settings`           | Array                      | `['captions', 'quality', 'speed', 'loop']`                                                                                     | If you're using the default controls are used then you can specify which settings to show in the menu                                                                                                                                                                                                                                                                  |
-| `i18n`               | Object                     | See [defaults.js](/src/js/defaults.js)                                                                                         | Used for internationalization (i18n) of the text within the UI.                                                                                                                                                                                                                                                                                                        |
+| `i18n`               | Object                     | See [defaults.js](/src/js/config/defaults.js)                                                                                         | Used for internationalization (i18n) of the text within the UI.                                                                                                                                                                                                                                                                                                        |
 | `loadSprite`         | Boolean                    | `true`                                                                                                                         | Load the SVG sprite specified as the `iconUrl` option (if a URL). If `false`, it is assumed you are handling sprite loading yourself.                                                                                                                                                                                                                                  |
 | `iconUrl`            | String                     | `null`                                                                                                                         | Specify a URL or path to the SVG sprite. See the [SVG section](#svg) for more info.                                                                                                                                                                                                                                                                                    |
 | `iconPrefix`         | String                     | `plyr`                                                                                                                         | Specify the id prefix for the icons used in the default controls (e.g. "plyr-play" would be "plyr"). This is to prevent clashes if you're using your own SVG sprite but with the default controls. Most people can ignore this option.                                                                                                                                 |
@@ -303,7 +307,7 @@ Note the single quotes encapsulating the JSON and double quotes on the object ke
 | `invertTime`         | Boolean                    | `true`                                                                                                                         | Display the current time as a countdown rather than an incremental counter.                                                                                                                                                                                                                                                                                            |
 | `toggleInvert`       | Boolean                    | `true`                                                                                                                         | Allow users to click to toggle the above.                                                                                                                                                                                                                                                                                                                              |
 | `listeners`          | Object                     | `null`                                                                                                                         | Allows binding of event listeners to the controls before the default handlers. See the `defaults.js` for available listeners. If your handler prevents default on the event (`event.preventDefault()`), the default handler will not fire.                                                                                                                             |
-| `captions`           | Object                     | `{ active: false, language: window.navigator.language.split('-')[0] }`                                                         | `active`: Toggles if captions should be active by default. `language`: Sets the default language to load (if available).                                                                                                                                                                                                                                               |
+| `captions`           | Object                     | `{ active: false, language: 'auto', update: false }`                                                         | `active`: Toggles if captions should be active by default. `language`: Sets the default language to load (if available). 'auto' uses the browser language. `update`: Listen to changes to tracks and update menu. This is needed for some streaming libraries, but can result in unselectable language options).                                                                                                                                                                                                                                               |
 | `fullscreen`         | Object                     | `{ enabled: true, fallback: true, iosNative: false }`                                                                          | `enabled`: Toggles whether fullscreen should be enabled. `fallback`: Allow fallback to a full-window solution. `iosNative`: whether to use native iOS fullscreen when entering fullscreen (no custom controls)                                                                                                                                                         |
 | `ratio`              | String                     | `16:9`                                                                                                                         | The aspect ratio you want to use for embedded players.                                                                                                                                                                                                                                                                                                                 |
 | `storage`            | Object                     | `{ enabled: true, key: 'plyr' }`                                                                                               | `enabled`: Allow use of local storage to store user settings. `key`: The key name to use.                                                                                                                                                                                                                                                                              |
@@ -363,6 +367,7 @@ player.fullscreen.enter(); // Enter fullscreen
 | `airplay()`              | -                | Trigger the airplay dialog on supported devices.                                                           |
 | `toggleControls(toggle)` | Boolean          | Toggle the controls (video only). Takes optional truthy value to force it on/off.                                                        |
 | `on(event, function)`    | String, Function | Add an event listener for the specified event.                                                             |
+| `once(event, function)`    | String, Function | Add an event listener for the specified event once.                                                             |
 | `off(event, function)`   | String, Function | Remove an event listener for the specified event.                                                          |
 | `supports(type)`         | String           | Check support for a mime type.                                                                             |
 | `destroy()`              | -                | Destroy the instance and garbage collect any elements.                                                     |
@@ -407,7 +412,8 @@ player.fullscreen.active; // false;
 | `source`             | ✓      | ✓      | Gets or sets the current source for the player. The setter accepts an object. See [source setter](#source-setter) below for examples.                                                |
 | `poster`             | ✓      | ✓      | Gets or sets the current poster image for the player. The setter accepts a string; the URL for the updated poster image.                                                             |
 | `autoplay`           | ✓      | ✓      | Gets or sets the autoplay state of the player. The setter accepts a boolean.                                                                                                         |
-| `language`           | ✓      | ✓      | Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for the languages is dependent on the captions you include. |
+| `currentTrack`       | ✓      | ✓      | Gets or sets the caption track by index. `-1` means the track is missing or captions is not active |
+| `language`           | ✓      | ✓      | Gets or sets the preferred captions language for the player. The setter accepts an ISO two-letter language code. Support for the languages is dependent on the captions you include. If your captions don't have any language data, or if you have multiple tracks with the same language, you may want to use `currentTrack` instead. |
 | `fullscreen.active`  | ✓      | -      | Returns a boolean indicating if the current player is in fullscreen mode.                                                                                                            |
 | `fullscreen.enabled` | ✓      | -      | Returns a boolean indicating if the current player has fullscreen enabled.                                                                                                           |
 | `pip`                | ✓      | ✓      | Gets or sets the picture-in-picture state of the player. The setter accepts a boolean. This currently only supported on Safari 10+ on MacOS Sierra+ and iOS 10+.                     |
@@ -606,17 +612,6 @@ document then the shortcuts will work when any element has focus, apart from an 
 | `F`        | Toggle fullscreen                      |
 | `C`        | Toggle captions                        |
 | `L`        | Toggle loop                            |
-
-## Streaming
-
-Because Plyr is an extension of the standard HTML5 video and audio elements, third party streaming plugins can be used with Plyr. Massive thanks to Matias
-Russitto ([@russitto](https://github.com/russitto)) for working on this. Here's a few examples:
-
-*   Using [hls.js](https://github.com/dailymotion/hls.js) - [Demo](http://codepen.io/sampotts/pen/JKEMqB)
-*   Using [Shaka](https://github.com/google/shaka-player) - [Demo](http://codepen.io/sampotts/pen/zBNpVR)
-*   Using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) - [Demo](http://codepen.io/sampotts/pen/BzpJXN)
-
-_Note_: These need updating to use the new v3 syntax but would still work.
 
 ## Fullscreen
 
