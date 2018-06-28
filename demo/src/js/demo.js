@@ -114,13 +114,16 @@ import Raven from 'raven-js';
                     google: 'AIzaSyDrNwtN3nLH_8rjCmu5Wq3ZCm4MNAVdc0c',
                 },
                 ads: {
-                    enabled: true,
+                    enabled: false,
                     publisherId: '918848828995742',
                 },
             });
 
             // Expose for tinkering in the console
             window.player = player;
+
+            const shakaPlayer = new shaka.Player(player.media);
+            shakaPlayer.load('//tv2-dash-02.secure.footprint.net/egress/ahandler/tv2danmark_hss/tv2bornholm/tv2bornholm.isml/master.mpd');
 
             // Setup type toggle
             const buttons = document.querySelectorAll('[data-source]');

@@ -67,9 +67,9 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "http-server demo",
         "build": "gulp build",
-        "lint": "eslint src/js"
+        "lint": "eslint src/js",
+        "start": "bash -c 'for x in dist/*; do ln -s -f ../../$x demo/$x;done;' && http-server ./demo"
     },
     "author": "Sam Potts <sam@potts.es>",
     "dependencies": {

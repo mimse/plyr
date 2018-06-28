@@ -131,9 +131,7 @@ const controls = {
 
         return icon;
     },
-
-    // Create hidden text label
-    createLabel(type, attr = {}) {
+    createHiddenLabel(type, attr) {
         // Skip i18n for abbreviations and brand names
         const universals = {
             pip: 'PIP',
@@ -146,7 +144,18 @@ const controls = {
         });
         return createElement('span', attributes, text);
     },
+    createLabel(type, attr) {
+        // Skip i18n for abbreviations and brand names
+        const universals = {
+            pip: 'PIP',
+            airplay: 'AirPlay',
+        };
+        const text = universals[type] || i18n.get(type, this.config);
+        
+        const attributes = Object.assign({}, attr);
 
+        return createElement('span', attributes, text);
+    },
     // Create a badge
     createBadge(text) {
         if (is.empty(text)) {
@@ -187,7 +196,7 @@ const controls = {
         }
 
         if ('class' in attributes) {
-            if (attributes.class.includes(this.config.classNames.control)) {
+            if (attributes.class.includes(this.config.classNames.control) === false) {
                 attributes.class += ` ${this.config.classNames.control}`;
             }
         } else {
@@ -234,6 +243,10 @@ const controls = {
                 label = 'play';
                 icon = 'play';
                 break;
+            case 'live':
+                label = 'live';
+                type = 'text';
+                break;
 
             default:
                 label = type;
@@ -251,7 +264,7 @@ const controls = {
             button.appendChild(controls.createLabel.call(this, label, { class: 'label--not-pressed' }));
         } else {
             button.appendChild(controls.createIcon.call(this, icon));
-            button.appendChild(controls.createLabel.call(this, label));
+            button.appendChild(controls.createHiddenLabel.call(this, label));
         }
 
         // Merge attributes
@@ -630,6 +643,16 @@ const controls = {
     durationUpdate() {
         // Bail if no UI or durationchange event triggered after playing/seek when invertTime is false
         if (!this.supported.ui || (!this.config.invertTime && this.currentTime)) {
+            return;
+        }
+
+        // If duration is the 2**32 (shaka), Infinity (HLS), DASH-IF (Number.MAX_SAFE_INTEGER || Number.MAX_VALUE) indicating live we hide the currentTime and progressbar.
+        // https://github.com/video-dev/hls.js/blob/5820d29d3c4c8a46e8b75f1e3afa3e68c1a9a2db/src/controller/buffer-controller.js#L415
+        // https://github.com/google/shaka-player/blob/4d889054631f4e1cf0fbd80ddd2b71887c02e232/lib/media/streaming_engine.js#L1062
+        // https://github.com/Dash-Industry-Forum/dash.js/blob/69859f51b969645b234666800d4cb596d89c602d/src/dash/models/DashManifestModel.js#L338
+        if (this.duration >= 2**32) {
+            utils.toggleHidden(this.elements.display.currentTime, true);
+            utils.toggleHidden(this.elements.progress, true);
             return;
         }
 
@@ -1133,6 +1156,11 @@ const controls = {
         // Fast forward button
         if (this.config.controls.includes('fast-forward')) {
             container.appendChild(controls.createButton.call(this, 'fast-forward'));
+        }
+
+        // Live indicator
+        if (this.config.controls.includes('live')) {
+            container.appendChild(controls.createButton.call(this, 'live', { class: 'plyr__live' }));
         }
 
         // Progress

@@ -1,7 +1,13 @@
 typeof navigator === "object" && (function (global, factory) {
+<<<<<<< Updated upstream
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define('Plyr', factory) :
     (global.Plyr = factory());
+=======
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define('Plyr', factory) :
+	(global.Plyr = factory());
+>>>>>>> Stashed changes
 }(this, (function () { 'use strict';
 
     // ==========================================================================
@@ -237,7 +243,34 @@ typeof navigator === "object" && (function (global, factory) {
                     callback = item.callback,
                     options = item.options;
 
+<<<<<<< Updated upstream
                 element.removeEventListener(type, callback, options);
+=======
+    // Load image avoiding xhr/fetch CORS issues
+    // Server status can't be obtained this way unfortunately, so this uses "naturalWidth" to determine if the image has loaded.
+    // By default it checks if it is at least 1px, but you can add a second argument to change this.
+    loadImage: function loadImage(src) {
+        var minWidth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+        return new Promise(function (resolve, reject) {
+            var image = new Image();
+            var handler = function handler() {
+                delete image.onload;
+                delete image.onerror;
+                (image.naturalWidth >= minWidth ? resolve : reject)(image);
+            };
+            Object.assign(image, { onload: handler, onerror: handler, src: src });
+        });
+    },
+
+
+    // Load an external script
+    loadScript: function loadScript(url) {
+        return new Promise(function (resolve, reject) {
+            loadjs_umd(url, {
+                success: resolve,
+                error: reject
+>>>>>>> Stashed changes
             });
 
             this.eventListeners = [];
@@ -404,7 +437,11 @@ typeof navigator === "object" && (function (global, factory) {
         }
 
         // Add text node
+<<<<<<< Updated upstream
         if (is.string(text)) {
+=======
+        if (utils.is.string(text)) {
+>>>>>>> Stashed changes
             element.innerText = text;
         }
 
@@ -533,11 +570,20 @@ typeof navigator === "object" && (function (global, factory) {
         } else {
             element.removeAttribute('hidden');
         }
+<<<<<<< Updated upstream
     }
 
     // Mirror Element.classList.toggle, with IE compatibility for "force" argument
     function toggleClass(element, className, force) {
         if (is.element(element)) {
+=======
+    },
+
+
+    // Mirror Element.classList.toggle, with IE compatibility for "force" argument
+    toggleClass: function toggleClass(element, className, force) {
+        if (utils.is.element(element)) {
+>>>>>>> Stashed changes
             var method = 'toggle';
             if (typeof force !== 'undefined') {
                 method = force ? 'add' : 'remove';
@@ -930,8 +976,43 @@ typeof navigator === "object" && (function (global, factory) {
             }
         });
 
+<<<<<<< Updated upstream
         return extend.apply(undefined, [target].concat(sources));
     }
+=======
+        return utils.extend.apply(utils, [target].concat(toConsumableArray(sources)));
+    },
+
+
+    // Remove duplicates in an array
+    dedupe: function dedupe(array) {
+        if (!utils.is.array(array)) {
+            return array;
+        }
+
+        return array.filter(function (item, index) {
+            return array.indexOf(item) === index;
+        });
+    },
+
+
+    // Clone nested objects
+    cloneDeep: function cloneDeep(object) {
+        return JSON.parse(JSON.stringify(object));
+    },
+
+
+    // Get the closest value in an array
+    closest: function closest(array, value) {
+        if (!utils.is.array(array) || !array.length) {
+            return null;
+        }
+
+        return array.reduce(function (prev, curr) {
+            return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
+        });
+    },
+>>>>>>> Stashed changes
 
     // ==========================================================================
 
@@ -1580,8 +1661,13 @@ typeof navigator === "object" && (function (global, factory) {
                 }
             });
 
+<<<<<<< Updated upstream
             return button;
         },
+=======
+            progress.innerText = '% ' + suffix.toLowerCase();
+        }
+>>>>>>> Stashed changes
 
 
         // Create an <input type='range'>
@@ -1681,7 +1767,13 @@ typeof navigator === "object" && (function (global, factory) {
                 class: 'plyr__sr-only'
             }));
 
+<<<<<<< Updated upstream
             var faux = createElement('span', { hidden: '' });
+=======
+        // eslint-disable-next-line no-param-reassign
+        target.innerText = utils.formatTime(time, forceHours, inverted);
+    },
+>>>>>>> Stashed changes
 
             label.appendChild(radio);
             label.appendChild(faux);
@@ -1771,6 +1863,7 @@ typeof navigator === "object" && (function (global, factory) {
                 return;
             }
 
+<<<<<<< Updated upstream
             var value = 0;
 
             var setProgress = function setProgress(target, input) {
@@ -1780,6 +1873,15 @@ typeof navigator === "object" && (function (global, factory) {
                 // Update value and label
                 if (is.element(progress)) {
                     progress.value = value;
+=======
+        if (event) {
+            switch (event.type) {
+                // Video playing
+                case 'timeupdate':
+                case 'seeking':
+                case 'seeked':
+                    value = utils.getPercentage(this.currentTime, this.duration);
+>>>>>>> Stashed changes
 
                     // Update text label inside
                     var label = progress.getElementsByTagName('span')[0];
@@ -1862,10 +1964,17 @@ typeof navigator === "object" && (function (global, factory) {
                 return;
             }
 
+<<<<<<< Updated upstream
             // Calculate percentage
             var percent = 0;
             var clientRect = this.elements.progress.getBoundingClientRect();
             var visible = this.config.classNames.tooltip + '--visible';
+=======
+        // Calculate percentage
+        var percent = 0;
+        var clientRect = this.elements.progress.getBoundingClientRect();
+        var visible = this.config.classNames.tooltip + '--visible';
+>>>>>>> Stashed changes
 
             var toggle = function toggle(_toggle) {
                 toggleClass(_this2.elements.display.seekTooltip, visible, _toggle);
@@ -1925,12 +2034,31 @@ typeof navigator === "object" && (function (global, factory) {
         },
 
 
+<<<<<<< Updated upstream
         // Show the duration on metadataloaded or durationchange events
         durationUpdate: function durationUpdate() {
             // Bail if no UI or durationchange event triggered after playing/seek when invertTime is false
             if (!this.supported.ui || !this.config.invertTime && this.currentTime) {
                 return;
             }
+=======
+    // Show the duration on metadataloaded or durationchange events
+    durationUpdate: function durationUpdate() {
+        // Bail if no ui or durationchange event triggered after playing/seek when invertTime is false
+        if (!this.supported.ui || !this.config.invertTime && this.currentTime) {
+            return;
+        }
+
+        // If duration is the 2**32 (shaka), Infinity (HLS), DASH-IF (Number.MAX_SAFE_INTEGER || Number.MAX_VALUE) indicating live we hide the currentTime and progressbar.
+        // https://github.com/video-dev/hls.js/blob/5820d29d3c4c8a46e8b75f1e3afa3e68c1a9a2db/src/controller/buffer-controller.js#L415
+        // https://github.com/google/shaka-player/blob/4d889054631f4e1cf0fbd80ddd2b71887c02e232/lib/media/streaming_engine.js#L1062
+        // https://github.com/Dash-Industry-Forum/dash.js/blob/69859f51b969645b234666800d4cb596d89c602d/src/dash/models/DashManifestModel.js#L338
+        if (this.duration >= Math.pow(2, 32)) {
+            utils.toggleHidden(this.elements.display.currentTime, true);
+            utils.toggleHidden(this.elements.progress, true);
+            return;
+        }
+>>>>>>> Stashed changes
 
             // Update ARIA values
             if (is.element(this.elements.inputs.seek)) {
@@ -2429,10 +2557,26 @@ typeof navigator === "object" && (function (global, factory) {
         create: function create(data) {
             var _this7 = this;
 
+<<<<<<< Updated upstream
             // Do nothing if we want no controls
             if (is.empty(this.config.controls)) {
                 return null;
             }
+=======
+        // Live indicator
+        if (this.config.controls.includes('live')) {
+            var live = utils.createElement('span', {
+                class: 'plyr__live'
+            }, 'LIVE');
+
+            this.elements.live = live;
+            container.appendChild(live);
+        }
+
+        // Progress
+        if (this.config.controls.includes('progress')) {
+            var progress = utils.createElement('div', utils.getAttributesFromSelector(this.config.selectors.progress));
+>>>>>>> Stashed changes
 
             // Create the container
             var container = createElement('div', getAttributesFromSelector(this.config.selectors.controls.wrapper));
@@ -3075,8 +3219,16 @@ typeof navigator === "object" && (function (global, factory) {
                     this.embed.enableTextTrack(language);
                 }
 
+<<<<<<< Updated upstream
                 // Trigger event
                 triggerEvent.call(this, this.media, 'languagechange');
+=======
+            // Set the span content
+            if (utils.is.string(caption)) {
+                content.innerText = caption.trim();
+            } else {
+                content.appendChild(caption);
+>>>>>>> Stashed changes
             }
 
             // Show captions
@@ -3135,6 +3287,7 @@ typeof navigator === "object" && (function (global, factory) {
 
             var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+<<<<<<< Updated upstream
             var tracks = captions.getTracks.call(this);
             var sortIsDefault = function sortIsDefault(track) {
                 return Number((_this3.captions.meta.get(track) || {}).default);
@@ -3151,6 +3304,191 @@ typeof navigator === "object" && (function (global, factory) {
             });
             // If no match is found but is required, get first
             return track || (force ? sorted[0] : undefined);
+=======
+    // Local storage
+    storage: {
+        enabled: true,
+        key: 'plyr'
+    },
+
+    // Default controls
+    controls: ['play-large',
+    // 'restart',
+    // 'rewind',
+    'play',
+    // 'fast-forward',
+    'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen', 'live'],
+    settings: ['captions', 'quality', 'speed'],
+
+    // Localisation
+    i18n: {
+        restart: 'Restart',
+        rewind: 'Rewind {seektime}s',
+        play: 'Play',
+        pause: 'Pause',
+        fastForward: 'Forward {seektime}s',
+        seek: 'Seek',
+        played: 'Played',
+        buffered: 'Buffered',
+        currentTime: 'Current time',
+        duration: 'Duration',
+        volume: 'Volume',
+        mute: 'Mute',
+        unmute: 'Unmute',
+        enableCaptions: 'Enable captions',
+        disableCaptions: 'Disable captions',
+        enterFullscreen: 'Enter fullscreen',
+        exitFullscreen: 'Exit fullscreen',
+        frameTitle: 'Player for {title}',
+        captions: 'Captions',
+        settings: 'Settings',
+        speed: 'Speed',
+        normal: 'Normal',
+        quality: 'Quality',
+        loop: 'Loop',
+        start: 'Start',
+        end: 'End',
+        all: 'All',
+        reset: 'Reset',
+        disabled: 'Disabled',
+        enabled: 'Enabled',
+        advertisement: 'Ad'
+    },
+
+    // URLs
+    urls: {
+        vimeo: {
+            sdk: 'https://player.vimeo.com/api/player.js',
+            iframe: 'https://player.vimeo.com/video/{0}?{1}',
+            api: 'https://vimeo.com/api/v2/video/{0}.json'
+        },
+        youtube: {
+            sdk: 'https://www.youtube.com/iframe_api',
+            api: 'https://www.googleapis.com/youtube/v3/videos?id={0}&key={1}&fields=items(snippet(title))&part=snippet'
+        },
+        googleIMA: {
+            sdk: 'https://imasdk.googleapis.com/js/sdkloader/ima3.js'
+        }
+    },
+
+    // Custom control listeners
+    listeners: {
+        seek: null,
+        play: null,
+        pause: null,
+        restart: null,
+        rewind: null,
+        fastForward: null,
+        mute: null,
+        volume: null,
+        captions: null,
+        fullscreen: null,
+        pip: null,
+        airplay: null,
+        speed: null,
+        quality: null,
+        loop: null,
+        language: null
+    },
+
+    // Events to watch and bubble
+    events: [
+    // Events to watch on HTML5 media elements and bubble
+    // https://developer.mozilla.org/en/docs/Web/Guide/Events/Media_events
+    'ended', 'progress', 'stalled', 'playing', 'waiting', 'canplay', 'canplaythrough', 'loadstart', 'loadeddata', 'loadedmetadata', 'timeupdate', 'volumechange', 'play', 'pause', 'error', 'seeking', 'seeked', 'emptied', 'ratechange', 'cuechange',
+
+    // Custom events
+    'enterfullscreen', 'exitfullscreen', 'captionsenabled', 'captionsdisabled', 'languagechange', 'controlshidden', 'controlsshown', 'ready',
+
+    // YouTube
+    'statechange', 'qualitychange', 'qualityrequested',
+
+    // Ads
+    'adsloaded', 'adscontentpause', 'adscontentresume', 'adstarted', 'adsmidpoint', 'adscomplete', 'adsallcomplete', 'adsimpression', 'adsclick'],
+
+    // Selectors
+    // Change these to match your template if using custom HTML
+    selectors: {
+        editable: 'input, textarea, select, [contenteditable]',
+        container: '.plyr',
+        controls: {
+            container: null,
+            wrapper: '.plyr__controls'
+        },
+        labels: '[data-plyr]',
+        buttons: {
+            play: '[data-plyr="play"]',
+            pause: '[data-plyr="pause"]',
+            restart: '[data-plyr="restart"]',
+            rewind: '[data-plyr="rewind"]',
+            fastForward: '[data-plyr="fast-forward"]',
+            mute: '[data-plyr="mute"]',
+            captions: '[data-plyr="captions"]',
+            fullscreen: '[data-plyr="fullscreen"]',
+            pip: '[data-plyr="pip"]',
+            airplay: '[data-plyr="airplay"]',
+            settings: '[data-plyr="settings"]',
+            loop: '[data-plyr="loop"]'
+        },
+        inputs: {
+            seek: '[data-plyr="seek"]',
+            volume: '[data-plyr="volume"]',
+            speed: '[data-plyr="speed"]',
+            language: '[data-plyr="language"]',
+            quality: '[data-plyr="quality"]'
+        },
+        display: {
+            currentTime: '.plyr__time--current',
+            duration: '.plyr__time--duration',
+            buffer: '.plyr__progress--buffer',
+            played: '.plyr__progress--played',
+            loop: '.plyr__progress--loop',
+            volume: '.plyr__volume--display'
+        },
+        progress: '.plyr__progress',
+        captions: '.plyr__captions',
+        menu: {
+            quality: '.js-plyr__menu__list--quality'
+        }
+    },
+
+    // Class hooks added to the player in different states
+    classNames: {
+        type: 'plyr--{0}',
+        provider: 'plyr--{0}',
+        video: 'plyr__video-wrapper',
+        embed: 'plyr__video-embed',
+        embedContainer: 'plyr__video-embed__container',
+        poster: 'plyr__poster',
+        posterEnabled: 'plyr__poster-enabled',
+        ads: 'plyr__ads',
+        control: 'plyr__control',
+        playing: 'plyr--playing',
+        paused: 'plyr--paused',
+        stopped: 'plyr--stopped',
+        loading: 'plyr--loading',
+        hover: 'plyr--hover',
+        tooltip: 'plyr__tooltip',
+        cues: 'plyr__cues',
+        hidden: 'plyr__sr-only',
+        hideControls: 'plyr--hide-controls',
+        isIos: 'plyr--is-ios',
+        isTouch: 'plyr--is-touch',
+        uiSupported: 'plyr--full-ui',
+        noTransition: 'plyr--no-transition',
+        menu: {
+            value: 'plyr__menu__value',
+            badge: 'plyr__badge',
+            open: 'plyr--menu-open'
+        },
+        captions: {
+            enabled: 'plyr--captions-enabled',
+            active: 'plyr--captions-active'
+        },
+        fullscreen: {
+            enabled: 'plyr--fullscreen-enabled',
+            fallback: 'plyr--fullscreen-fallback'
+>>>>>>> Stashed changes
         },
 
 
@@ -3735,6 +4073,7 @@ typeof navigator === "object" && (function (global, factory) {
             key: 'update',
 
 
+<<<<<<< Updated upstream
             // Update UI
             value: function update() {
                 if (this.enabled) {
@@ -3742,6 +4081,13 @@ typeof navigator === "object" && (function (global, factory) {
                 } else {
                     this.player.debug.log('Fullscreen not supported and fallback disabled');
                 }
+=======
+        // Assure the poster image is set, if the property was added before the element was created
+        if (this.poster && this.elements.poster && !this.elements.poster.style.backgroundImage) {
+            ui.setPoster.call(this, this.poster);
+        }
+    },
+>>>>>>> Stashed changes
 
                 // Add styling hook to show button
                 toggleClass(this.player.elements.container, this.player.config.classNames.fullscreen.enabled, this.enabled);
@@ -3807,11 +4153,52 @@ typeof navigator === "object" && (function (global, factory) {
         }, {
             key: 'enabled',
 
+<<<<<<< Updated upstream
 
             // Determine if fullscreen is enabled
             get: function get$$1() {
                 return (Fullscreen.native || this.player.config.fullscreen.fallback) && this.player.config.fullscreen.enabled && this.player.supported.ui && this.player.isVideo;
             }
+=======
+    // Toggle poster
+    togglePoster: function togglePoster(enable) {
+        utils.toggleClass(this.elements.container, this.config.classNames.posterEnabled, enable);
+    },
+
+
+    // Set the poster image (async)
+    setPoster: function setPoster(poster) {
+        var _this2 = this;
+
+        // Set property regardless of validity
+        this.media.setAttribute('poster', poster);
+
+        // Bail if element is missing
+        if (!utils.is.element(this.elements.poster)) {
+            return Promise.reject();
+        }
+
+        // Load the image, and set poster if successful
+        var loadPromise = utils.loadImage(poster).then(function () {
+            _this2.elements.poster.style.backgroundImage = 'url(\'' + poster + '\')';
+            Object.assign(_this2.elements.poster.style, {
+                backgroundImage: 'url(\'' + poster + '\')',
+                // Reset backgroundSize as well (since it can be set to "cover" for padded thumbnails for youtube)
+                backgroundSize: ''
+            });
+            ui.togglePoster.call(_this2, true);
+            return poster;
+        });
+
+        // Hide the element if the poster can't be loaded (otherwise it will just be a black element covering the video)
+        loadPromise.catch(function () {
+            return ui.togglePoster.call(_this2, false);
+        });
+
+        // Return the promise so the caller can use it as well
+        return loadPromise;
+    },
+>>>>>>> Stashed changes
 
             // Get active state
 
@@ -3829,11 +4216,18 @@ typeof navigator === "object" && (function (global, factory) {
 
                 var element = !this.prefix ? document.fullscreenElement : document['' + this.prefix + this.property + 'Element'];
 
+<<<<<<< Updated upstream
                 return element === this.target;
             }
+=======
+        // Toggle controls
+        ui.toggleControls.call(this);
+    },
+>>>>>>> Stashed changes
 
             // Get target element
 
+<<<<<<< Updated upstream
         }, {
             key: 'target',
             get: function get$$1() {
@@ -3844,6 +4238,11 @@ typeof navigator === "object" && (function (global, factory) {
             get: function get$$1() {
                 return !!(document.fullscreenEnabled || document.webkitFullscreenEnabled || document.mozFullScreenEnabled || document.msFullscreenEnabled);
             }
+=======
+    // Check if media is loading
+    checkLoading: function checkLoading(event) {
+        var _this3 = this;
+>>>>>>> Stashed changes
 
             // Get the prefix for handlers
 
@@ -3855,6 +4254,7 @@ typeof navigator === "object" && (function (global, factory) {
                     return '';
                 }
 
+<<<<<<< Updated upstream
                 // Check for fullscreen support by vendor prefix
                 var value = '';
                 var prefixes = ['webkit', 'moz', 'ms'];
@@ -3864,10 +4264,22 @@ typeof navigator === "object" && (function (global, factory) {
                         value = pre;
                         return true;
                     }
+=======
+        // Timer to prevent flicker when seeking
+        this.timers.loading = setTimeout(function () {
+            // Update progress bar loading class state
+            utils.toggleClass(_this3.elements.container, _this3.config.classNames.loading, _this3.loading);
+
+            // Update controls visibility
+            ui.toggleControls.call(_this3);
+        }, this.loading ? 250 : 0);
+    },
+>>>>>>> Stashed changes
 
                     return false;
                 });
 
+<<<<<<< Updated upstream
                 return value;
             }
         }, {
@@ -3899,6 +4311,17 @@ typeof navigator === "object" && (function (global, factory) {
 
             Object.assign(image, { onload: handler, onerror: handler, src: src });
         });
+=======
+    // Toggle controls based on state and `force` argument
+    toggleControls: function toggleControls(force) {
+        var controls$$1 = this.elements.controls;
+
+
+        if (controls$$1 && this.config.hideControls) {
+            // Show controls if force, loading, paused, or button interaction, otherwise hide
+            this.toggleControls(Boolean(force || this.loading || this.paused || controls$$1.pressed || controls$$1.hover));
+        }
+>>>>>>> Stashed changes
     }
 
     // ==========================================================================
@@ -4115,19 +4538,59 @@ typeof navigator === "object" && (function (global, factory) {
                 target.pressed = _this3.playing;
             });
 
+<<<<<<< Updated upstream
             // Only update controls on non timeupdate events
             if (is.event(event) && event.type === 'timeupdate') {
                 return;
             }
+=======
+            // Toggle controls on mouse events and entering fullscreen
+            utils.on(this.player.elements.container, 'mousemove mouseleave touchstart touchmove enterfullscreen exitfullscreen', function (event) {
+                var controls$$1 = _this2.player.elements.controls;
+
+                // Remove button states for fullscreen
+
+                if (event.type === 'enterfullscreen') {
+                    controls$$1.pressed = false;
+                    controls$$1.hover = false;
+                }
+
+                // Show, then hide after a timeout unless another control event occurs
+                var show = ['touchstart', 'touchmove', 'mousemove'].includes(event.type);
+
+                var delay = 0;
+
+                if (show) {
+                    ui.toggleControls.call(_this2.player, true);
+                    // Use longer timeout for touch devices
+                    delay = _this2.player.touch ? 3000 : 2000;
+                }
+
+                // Clear timer
+                clearTimeout(_this2.player.timers.controls);
+                // Timer to prevent flicker when seeking
+                _this2.player.timers.controls = setTimeout(function () {
+                    return ui.toggleControls.call(_this2.player, false);
+                }, delay);
+            });
+        }
+>>>>>>> Stashed changes
 
             // Toggle controls
             ui.toggleControls.call(this);
         },
 
 
+<<<<<<< Updated upstream
         // Check if media is loading
         checkLoading: function checkLoading(event) {
             var _this4 = this;
+=======
+            // Time change on media
+            utils.on(this.player.media, 'timeupdate seeking seeked', function (event) {
+                return controls.timeUpdate.call(_this3.player, event);
+            });
+>>>>>>> Stashed changes
 
             this.loading = ['stalled', 'waiting'].includes(event.type);
 
@@ -4166,10 +4629,17 @@ typeof navigator === "object" && (function (global, factory) {
             this.player = player;
             this.lastKey = null;
 
+<<<<<<< Updated upstream
             this.handleKey = this.handleKey.bind(this);
             this.toggleMenu = this.toggleMenu.bind(this);
             this.firstTouch = this.firstTouch.bind(this);
         }
+=======
+            // Check for buffer progress
+            utils.on(this.player.media, 'progress playing seeking seeked', function (event) {
+                return controls.updateProgress.call(_this3.player, event);
+            });
+>>>>>>> Stashed changes
 
         // Handle key presses
 
@@ -4179,12 +4649,19 @@ typeof navigator === "object" && (function (global, factory) {
             value: function handleKey(event) {
                 var _this = this;
 
+<<<<<<< Updated upstream
                 var code = event.keyCode ? event.keyCode : event.which;
                 var pressed = event.type === 'keydown';
                 var repeat = pressed && code === this.lastKey;
 
                 // Bail if a modifier key is set
                 if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+=======
+            // If autoplay, then load advertisement if required
+            // TODO: Show some sort of loading state while the ad manager loads else there's a delay before ad shows
+            utils.on(this.player.media, 'playing', function () {
+                if (!_this3.player.ads) {
+>>>>>>> Stashed changes
                     return;
                 }
 
@@ -4422,10 +4899,64 @@ typeof navigator === "object" && (function (global, factory) {
             value: function media() {
                 var _this3 = this;
 
+<<<<<<< Updated upstream
                 // Time change on media
                 on.call(this.player, this.player.media, 'timeupdate seeking seeked', function (event) {
                     return controls.timeUpdate.call(_this3.player, event);
                 });
+=======
+            // Set range input alternative "value", which matches the tooltip time (#954)
+            on(this.player.elements.inputs.seek, 'mousedown mousemove', function (event) {
+                var clientRect = _this4.player.elements.progress.getBoundingClientRect();
+                var percent = 100 / clientRect.width * (event.pageX - clientRect.left);
+                event.currentTarget.setAttribute('seek-value', percent);
+            });
+
+            // Pause while seeking
+            on(this.player.elements.inputs.seek, 'mousedown mouseup keydown keyup touchstart touchend', function (event) {
+                var seek = event.currentTarget;
+
+                // Was playing before?
+                var play = seek.hasAttribute('play-on-seeked');
+
+                // Done seeking
+                var done = ['mouseup', 'touchend', 'keyup'].includes(event.type);
+
+                // If we're done seeking and it was playing, resume playback
+                if (play && done) {
+                    seek.removeAttribute('play-on-seeked');
+                    _this4.player.play();
+                } else if (!done && _this4.player.playing) {
+                    seek.setAttribute('play-on-seeked', '');
+                    _this4.player.pause();
+                }
+            });
+
+            // Seek
+            on(this.player.elements.inputs.seek, inputEvent, function (event) {
+                var seek = event.currentTarget;
+
+                // If it exists, use seek-value instead of "value" for consistency with tooltip time (#954)
+                var seekTo = seek.getAttribute('seek-value');
+
+                if (utils.is.empty(seekTo)) {
+                    seekTo = seek.value;
+                }
+
+                seek.removeAttribute('seek-value');
+
+                _this4.player.currentTime = seekTo / seek.max * _this4.player.duration;
+            }, 'seek');
+
+            // Current time invert
+            // Only if one time element is used for both currentTime and duration
+            if (this.player.config.toggleInvert && !utils.is.element(this.player.elements.display.duration)) {
+                on(this.player.elements.display.currentTime, 'click', function () {
+                    // Do nothing if we're at the start
+                    if (_this4.player.currentTime === 0) {
+                        return;
+                    }
+>>>>>>> Stashed changes
 
                 // Display duration
                 on.call(this.player, this.player.media, 'durationchange loadeddata loadedmetadata', function (event) {
@@ -4453,6 +4984,7 @@ typeof navigator === "object" && (function (global, factory) {
                     return controls.updateProgress.call(_this3.player, event);
                 });
 
+<<<<<<< Updated upstream
                 // Handle volume changes
                 on.call(this.player, this.player.media, 'volumechange', function (event) {
                     return controls.updateVolume.call(_this3.player, event);
@@ -4467,6 +4999,50 @@ typeof navigator === "object" && (function (global, factory) {
                 on.call(this.player, this.player.media, 'waiting canplay seeked playing', function (event) {
                     return ui.checkLoading.call(_this3.player, event);
                 });
+=======
+            // Update controls.hover state (used for ui.toggleControls to avoid hiding when interacting)
+            on(this.player.elements.controls, 'mouseenter mouseleave', function (event) {
+                _this4.player.elements.controls.hover = !_this4.player.touch && event.type === 'mouseenter';
+            });
+
+            // Update controls.pressed state (used for ui.toggleControls to avoid hiding when interacting)
+            on(this.player.elements.controls, 'mousedown mouseup touchstart touchend touchcancel', function (event) {
+                _this4.player.elements.controls.pressed = ['mousedown', 'touchstart'].includes(event.type);
+            });
+
+            // Focus in/out on controls
+            on(this.player.elements.controls, 'focusin focusout', function (event) {
+                var _player = _this4.player,
+                    config = _player.config,
+                    elements = _player.elements,
+                    timers = _player.timers;
+
+                // Skip transition to prevent focus from scrolling the parent element
+
+                utils.toggleClass(elements.controls, config.classNames.noTransition, event.type === 'focusin');
+
+                // Toggle
+                ui.toggleControls.call(_this4.player, event.type === 'focusin');
+
+                // If focusin, hide again after delay
+                if (event.type === 'focusin') {
+                    // Restore transition
+                    setTimeout(function () {
+                        utils.toggleClass(elements.controls, config.classNames.noTransition, false);
+                    }, 0);
+
+                    // Delay a little more for keyboard users
+                    var delay = _this4.touch ? 3000 : 4000;
+
+                    // Clear timer
+                    clearTimeout(timers.controls);
+                    // Hide
+                    timers.controls = setTimeout(function () {
+                        return ui.toggleControls.call(_this4.player, false);
+                    }, delay);
+                }
+            });
+>>>>>>> Stashed changes
 
                 // If autoplay, then load advertisement if required
                 // TODO: Show some sort of loading state while the ad manager loads else there's a delay before ad shows
@@ -4532,9 +5108,23 @@ typeof navigator === "object" && (function (global, factory) {
                     // Update UI
                     controls.updateSetting.call(_this3.player, 'speed');
 
+<<<<<<< Updated upstream
                     // Save to storage
                     _this3.player.storage.set({ speed: _this3.player.speed });
                 });
+=======
+// Set playback state and trigger change (only on actual change)
+function assurePlaybackState(play) {
+    if (this.media.paused === play) {
+        this.media.paused = !play;
+        utils.dispatchEvent.call(this, this.media, play ? 'play' : 'pause');
+    }
+}
+
+var vimeo = {
+    setup: function setup() {
+        var _this = this;
+>>>>>>> Stashed changes
 
                 // Quality request
                 on.call(this.player, this.player.media, 'qualityrequested', function (event) {
@@ -4615,6 +5205,7 @@ typeof navigator === "object" && (function (global, factory) {
                 // Rewind
                 bind(this.player.elements.buttons.rewind, 'click', this.player.rewind, 'rewind');
 
+<<<<<<< Updated upstream
                 // Rewind
                 bind(this.player.elements.buttons.fastForward, 'click', this.player.forward, 'fastForward');
 
@@ -4622,6 +5213,11 @@ typeof navigator === "object" && (function (global, factory) {
                 bind(this.player.elements.buttons.mute, 'click', function () {
                     _this4.player.muted = !_this4.player.muted;
                 }, 'mute');
+=======
+            // Set and show poster
+            ui.setPoster.call(player, url.href);
+        });
+>>>>>>> Stashed changes
 
                 // Captions toggle
                 bind(this.player.elements.buttons.captions, 'click', function () {
@@ -4638,6 +5234,7 @@ typeof navigator === "object" && (function (global, factory) {
                     _this4.player.pip = 'toggle';
                 }, 'pip');
 
+<<<<<<< Updated upstream
                 // Airplay
                 bind(this.player.elements.buttons.airplay, 'click', this.player.airplay, 'airplay');
 
@@ -4645,6 +5242,18 @@ typeof navigator === "object" && (function (global, factory) {
                 bind(this.player.elements.buttons.settings, 'click', function (event) {
                     controls.toggleMenu.call(_this4.player, event);
                 });
+=======
+        // Create a faux HTML5 API using the Vimeo API
+        player.media.play = function () {
+            assurePlaybackState.call(player, true);
+            return player.embed.play();
+        };
+
+        player.media.pause = function () {
+            assurePlaybackState.call(player, false);
+            return player.embed.pause();
+        };
+>>>>>>> Stashed changes
 
                 // Settings menu
                 bind(this.player.elements.settings.form, 'click', function (event) {
@@ -4656,6 +5265,7 @@ typeof navigator === "object" && (function (global, factory) {
                         controls.showTab.call(_this4.player, id);
                     };
 
+<<<<<<< Updated upstream
                     // Settings menu items - use event delegation as items are added/removed
                     if (matches(event.target, _this4.player.config.selectors.inputs.language)) {
                         proxy(event, function () {
@@ -4714,6 +5324,44 @@ typeof navigator === "object" && (function (global, factory) {
                 // Seek
                 bind(this.player.elements.inputs.seek, inputEvent, function (event) {
                     var seek = event.currentTarget;
+=======
+        Object.defineProperty(player.media, 'currentTime', {
+            get: function get() {
+                return currentTime;
+            },
+            set: function set(time) {
+                // Vimeo will automatically play on seek if the video hasn't been played before
+
+                // Get current paused state and volume etc
+                var embed = player.embed,
+                    media = player.media,
+                    paused = player.paused,
+                    volume = player.volume;
+
+                // Set seeking state and trigger event
+
+                media.seeking = true;
+                utils.dispatchEvent.call(player, media, 'seeking');
+
+                // If paused, mute until seek is complete
+                Promise.resolve(paused && embed.setVolume(0))
+                // Seek
+                .then(function () {
+                    return embed.setCurrentTime(time);
+                })
+                // Restore paused
+                .then(function () {
+                    return paused && embed.pause();
+                })
+                // Restore volume
+                .then(function () {
+                    return paused && embed.setVolume(volume);
+                }).catch(function () {
+                    // Do nothing
+                });
+            }
+        });
+>>>>>>> Stashed changes
 
                     // If it exists, use seek-value instead of "value" for consistency with tooltip time (#954)
                     var seekTo = seek.getAttribute('seek-value');
@@ -4924,6 +5572,7 @@ typeof navigator === "object" && (function (global, factory) {
       // exit if queue is empty
       if (!q) return;
 
+<<<<<<< Updated upstream
       // empty callback queue
       while (q.length) {
         q[0](bundleId, pathsNotFound);
@@ -4931,6 +5580,16 @@ typeof navigator === "object" && (function (global, factory) {
       }
     }
 
+=======
+        player.embed.on('play', function () {
+            assurePlaybackState.call(player, true);
+            utils.dispatchEvent.call(player, player.media, 'playing');
+        });
+
+        player.embed.on('pause', function () {
+            assurePlaybackState.call(player, false);
+        });
+>>>>>>> Stashed changes
 
     /**
      * Execute callbacks.
@@ -4981,6 +5640,7 @@ typeof navigator === "object" && (function (global, factory) {
         e.async = async === undefined ? true : async;
       }
 
+<<<<<<< Updated upstream
       e.onload = e.onerror = e.onbeforeload = function (ev) {
         var result = ev.type[0];
 
@@ -5068,6 +5728,12 @@ typeof navigator === "object" && (function (global, factory) {
 
       // args (default is {})
       args = (bundleId ? arg2 : arg1) || {};
+=======
+        player.embed.on('seeked', function () {
+            player.media.seeking = false;
+            utils.dispatchEvent.call(player, player.media, 'seeked');
+        });
+>>>>>>> Stashed changes
 
       // throw error if bundle is already defined
       if (bundleId) {
@@ -5190,6 +5856,7 @@ typeof navigator === "object" && (function (global, factory) {
         setup: function setup() {
             var _this = this;
 
+<<<<<<< Updated upstream
             // Add embed class for responsive
             toggleClass(this.elements.wrapper, this.config.classNames.embed, true);
 
@@ -5207,6 +5874,19 @@ typeof navigator === "object" && (function (global, factory) {
                 vimeo.ready.call(this);
             }
         },
+=======
+// Set playback state and trigger change (only on actual change)
+function assurePlaybackState$1(play) {
+    if (this.media.paused === play) {
+        this.media.paused = !play;
+        utils.dispatchEvent.call(this, this.media, play ? 'play' : 'pause');
+    }
+}
+
+var youtube = {
+    setup: function setup() {
+        var _this = this;
+>>>>>>> Stashed changes
 
 
         // Set aspect ratio
@@ -5293,12 +5973,72 @@ typeof navigator === "object" && (function (global, factory) {
                 ui.setPoster.call(player, url.href).catch(function () {});
             });
 
+<<<<<<< Updated upstream
             // Setup instance
             // https://github.com/vimeo/player.js
             player.embed = new window.Vimeo.Player(iframe, {
                 autopause: player.config.autopause,
                 muted: player.muted
             });
+=======
+        // Replace the <iframe> with a <div> due to YouTube API issues
+        var videoId = utils.parseYouTubeId(source);
+        var id = utils.generateId(player.provider);
+        var container = utils.createElement('div', { id: id });
+        player.media = utils.replaceElement(container, player.media);
+
+        // Set poster image
+        var posterSrc = function posterSrc(format) {
+            return 'https://img.youtube.com/vi/' + videoId + '/' + format + 'default.jpg';
+        };
+
+        // Check thumbnail images in order of quality, but reject fallback thumbnails (120px wide)
+        utils.loadImage(posterSrc('maxres'), 121) // Higest quality and unpadded
+        .catch(function () {
+            return utils.loadImage(posterSrc('sd'), 121);
+        }) // 480p padded 4:3
+        .catch(function () {
+            return utils.loadImage(posterSrc('hq'));
+        }) // 360p padded 4:3. Always exists
+        .then(function (image) {
+            return ui.setPoster.call(player, image.src);
+        }).then(function (posterSrc) {
+            // If the image is padded, use background-size "cover" instead (like youtube does too with their posters)
+            if (!posterSrc.includes('maxres')) {
+                player.elements.poster.style.backgroundSize = 'cover';
+            }
+        });
+
+        // Setup instance
+        // https://developers.google.com/youtube/iframe_api_reference
+        player.embed = new window.YT.Player(id, {
+            videoId: videoId,
+            playerVars: {
+                autoplay: player.config.autoplay ? 1 : 0, // Autoplay
+                controls: player.supported.ui ? 0 : 1, // Only show controls if not fully supported
+                rel: 0, // No related vids
+                showinfo: 0, // Hide info
+                iv_load_policy: 3, // Hide annotations
+                modestbranding: 1, // Hide logos as much as possible (they still show one in the corner when paused)
+                disablekb: 1, // Disable keyboard as we handle it
+                playsinline: 1, // Allow iOS inline playback
+
+                // Tracking for stats
+                // origin: window ? `${window.location.protocol}//${window.location.host}` : null,
+                widget_referrer: window ? window.location.href : null,
+
+                // Captions are flaky on YouTube
+                cc_load_policy: player.captions.active ? 1 : 0,
+                cc_lang_pref: player.config.captions.language
+            },
+            events: {
+                onError: function onError(event) {
+                    // If we've already fired an error, don't do it again
+                    // YouTube fires onError twice
+                    if (utils.is.object(player.media.error)) {
+                        return;
+                    }
+>>>>>>> Stashed changes
 
             player.media.paused = true;
             player.media.currentTime = 0;
@@ -5416,6 +6156,7 @@ typeof navigator === "object" && (function (global, factory) {
                 }
             });
 
+<<<<<<< Updated upstream
             // Loop
             var loop = player.config.loop;
 
@@ -5425,6 +6166,18 @@ typeof navigator === "object" && (function (global, factory) {
                 },
                 set: function set$$1(input) {
                     var toggle = is.boolean(input) ? input : player.config.loop.active;
+=======
+                    // Create a faux HTML5 API using the YouTube API
+                    player.media.play = function () {
+                        assurePlaybackState$1.call(player, true);
+                        instance.playVideo();
+                    };
+
+                    player.media.pause = function () {
+                        assurePlaybackState$1.call(player, false);
+                        instance.pauseVideo();
+                    };
+>>>>>>> Stashed changes
 
                     player.embed.setLoop(toggle).then(function () {
                         loop = toggle;
@@ -5440,6 +6193,7 @@ typeof navigator === "object" && (function (global, factory) {
                 _this2.debug.warn(error);
             });
 
+<<<<<<< Updated upstream
             Object.defineProperty(player.media, 'currentSrc', {
                 get: function get$$1() {
                     return currentSrc;
@@ -5475,6 +6229,28 @@ typeof navigator === "object" && (function (global, factory) {
                 currentTime = value;
                 triggerEvent.call(player, player.media, 'timeupdate');
             });
+=======
+                    // Seeking
+                    player.media.currentTime = 0;
+                    Object.defineProperty(player.media, 'currentTime', {
+                        get: function get() {
+                            return Number(instance.getCurrentTime());
+                        },
+                        set: function set(time) {
+                            // If paused, mute audio preventively (YouTube starts playing on seek if the video hasn't been played yet).
+                            if (player.paused) {
+                                player.embed.mute();
+                            }
+
+                            // Set seeking state and trigger event
+                            player.media.seeking = true;
+                            utils.dispatchEvent.call(player, player.media, 'seeking');
+
+                            // Seek after events sent
+                            instance.seekTo(time);
+                        }
+                    });
+>>>>>>> Stashed changes
 
             // Get duration
             player.embed.getDuration().then(function (value) {
@@ -5560,10 +6336,44 @@ typeof navigator === "object" && (function (global, factory) {
                 triggerEvent.call(player, player.media, 'ended');
             });
 
+<<<<<<< Updated upstream
             player.embed.on('error', function (detail) {
                 player.media.error = detail;
                 triggerEvent.call(player, player.media, 'error');
             });
+=======
+                    // Rebuild UI
+                    setTimeout(function () {
+                        return ui.build.call(player);
+                    }, 50);
+                },
+                onStateChange: function onStateChange(event) {
+                    // Get the instance
+                    var instance = event.target;
+
+                    // Reset timer
+                    clearInterval(player.timers.playing);
+
+                    var seeked = player.media.seeking && [1, 2].includes(event.data);
+
+                    if (seeked) {
+                        // Unset seeking and fire seeked event
+                        player.media.seeking = false;
+                        utils.dispatchEvent.call(player, player.media, 'seeked');
+                    }
+
+                    // Handle events
+                    // -1   Unstarted
+                    // 0    Ended
+                    // 1    Playing
+                    // 2    Paused
+                    // 3    Buffering
+                    // 5    Video cued
+                    switch (event.data) {
+                        case -1:
+                            // Update scrubber
+                            utils.dispatchEvent.call(player, player.media, 'timeupdate');
+>>>>>>> Stashed changes
 
             // Rebuild UI
             setTimeout(function () {
@@ -5574,11 +6384,16 @@ typeof navigator === "object" && (function (global, factory) {
 
     // ==========================================================================
 
+<<<<<<< Updated upstream
     // Parse YouTube ID from URL
     function parseId$1(url) {
         if (is.empty(url)) {
             return null;
         }
+=======
+                        case 0:
+                            assurePlaybackState$1.call(player, false);
+>>>>>>> Stashed changes
 
         var regex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         return url.match(regex) ? RegExp.$2 : url;
@@ -5597,6 +6412,7 @@ typeof navigator === "object" && (function (global, factory) {
             tiny: 144
         };
 
+<<<<<<< Updated upstream
         var entry = Object.entries(qualities).find(function (entry) {
             return entry.includes(input);
         });
@@ -5631,16 +6447,52 @@ typeof navigator === "object" && (function (global, factory) {
             triggerEvent.call(this, this.media, play ? 'play' : 'pause');
         }
     }
+=======
+                        case 1:
+                            // Restore paused state (YouTube starts playing on seek if the video hasn't been played yet)
+                            if (player.media.paused) {
+                                player.media.pause();
+                            } else {
+                                assurePlaybackState$1.call(player, true);
+
+                                utils.dispatchEvent.call(player, player.media, 'playing');
+
+                                // Poll to get playback progress
+                                player.timers.playing = setInterval(function () {
+                                    utils.dispatchEvent.call(player, player.media, 'timeupdate');
+                                }, 50);
+
+                                // Check duration again due to YouTube bug
+                                // https://github.com/sampotts/plyr/issues/374
+                                // https://code.google.com/p/gdata-issues/issues/detail?id=8690
+                                if (player.media.duration !== instance.getDuration()) {
+                                    player.media.duration = instance.getDuration();
+                                    utils.dispatchEvent.call(player, player.media, 'durationchange');
+                                }
+
+                                // Get quality
+                                controls.setQualityMenu.call(player, mapQualityUnits(instance.getAvailableQualityLevels()));
+                            }
+>>>>>>> Stashed changes
 
     var youtube = {
         setup: function setup() {
             var _this = this;
 
+<<<<<<< Updated upstream
             // Add embed class for responsive
             toggleClass(this.elements.wrapper, this.config.classNames.embed, true);
 
             // Set aspect ratio
             youtube.setAspectRatio.call(this);
+=======
+                        case 2:
+                            // Restore audio (YouTube starts playing on seek if the video hasn't been played yet)
+                            if (!player.muted) {
+                                player.embed.unMute();
+                            }
+                            assurePlaybackState$1.call(player, false);
+>>>>>>> Stashed changes
 
             // Setup API
             if (is.object(window.YT) && is.function(window.YT.Player)) {
@@ -6756,11 +7608,37 @@ typeof navigator === "object" && (function (global, factory) {
              * @param {string} from
              */
 
+<<<<<<< Updated upstream
         }, {
             key: 'clearSafetyTimer',
             value: function clearSafetyTimer(from) {
                 if (!is.nullOrUndefined(this.safetyTimer)) {
                     this.player.debug.log('Safety timer cleared from: ' + from);
+=======
+        // Set config
+        this.config = utils.extend({}, defaults$1, Plyr.defaults, options || {}, function () {
+            try {
+                return JSON.parse(_this.media.getAttribute('data-plyr-config'));
+            } catch (e) {
+                return {};
+            }
+        }());
+
+        // Elements cache
+        this.elements = {
+            container: null,
+            buttons: {},
+            display: {},
+            progress: {},
+            inputs: {},
+            settings: {
+                menu: null,
+                panes: {},
+                tabs: {}
+            },
+            captions: null
+        };
+>>>>>>> Stashed changes
 
                     clearTimeout(this.safetyTimer);
                     this.safetyTimer = null;
@@ -6933,7 +7811,16 @@ typeof navigator === "object" && (function (global, factory) {
     // TODO: Use a WeakMap for private globals
     // const globals = new WeakMap();
 
+<<<<<<< Updated upstream
     // Plyr instance
+=======
+        // Listen for events if debugging
+        if (this.config.debug) {
+            utils.on(this.elements.container, this.config.events.join(' '), function (event) {
+                _this.debug.log('event: ' + event.type, event);
+            });
+        }
+>>>>>>> Stashed changes
 
     var Plyr = function () {
         function Plyr(target, options) {
@@ -7165,6 +8052,7 @@ typeof navigator === "object" && (function (global, factory) {
                 wrap(this.media, this.elements.container);
             }
 
+<<<<<<< Updated upstream
             // Add style hook
             ui.addStyleHook.call(this);
 
@@ -7263,6 +8151,40 @@ typeof navigator === "object" && (function (global, factory) {
                     this.pause();
                 }
             }
+=======
+        /**
+         * Toggle the player controls
+         * @param {boolean} [toggle] - Whether to show the controls
+         */
+
+    }, {
+        key: 'toggleControls',
+        value: function toggleControls(toggle) {
+            // Don't toggle if missing UI support or if it's audio
+            if (this.supported.ui && !this.isAudio) {
+                // Get state before change
+                var isHidden = utils.hasClass(this.elements.container, this.config.classNames.hideControls);
+
+                // Negate the argument if not undefined since adding the class to hides the controls
+                var force = typeof toggle === 'undefined' ? undefined : !toggle;
+
+                // Apply and get updated state
+                var hiding = utils.toggleClass(this.elements.container, this.config.classNames.hideControls, force);
+
+                // Close menu
+                if (hiding && this.config.controls.includes('settings') && !utils.is.empty(this.config.settings)) {
+                    controls.toggleMenu.call(this, false);
+                }
+                // Trigger event on change
+                if (hiding !== isHidden) {
+                    var eventName = hiding ? 'controlshidden' : 'controlsshown';
+                    utils.dispatchEvent.call(this, this.media, eventName);
+                }
+                return !hiding;
+            }
+            return false;
+        }
+>>>>>>> Stashed changes
 
             /**
              * Stop playback
@@ -7294,11 +8216,18 @@ typeof navigator === "object" && (function (global, factory) {
              * @param {number} seekTime - how far to rewind in seconds. Defaults to the config.seekTime
              */
 
+<<<<<<< Updated upstream
         }, {
             key: 'rewind',
             value: function rewind(seekTime) {
                 this.currentTime = this.currentTime - (is.number(seekTime) ? seekTime : this.config.seekTime);
             }
+=======
+    }, {
+        key: 'destroy',
+        value: function destroy(callback) {
+            var _this2 = this;
+>>>>>>> Stashed changes
 
             /**
              * Fast forward
@@ -7311,6 +8240,7 @@ typeof navigator === "object" && (function (global, factory) {
                 this.currentTime = this.currentTime + (is.number(seekTime) ? seekTime : this.config.seekTime);
             }
 
+<<<<<<< Updated upstream
             /**
              * Seek to a time
              * @param {number} input - where to seek to in seconds. Defaults to 0 (the start)
@@ -7348,6 +8278,60 @@ typeof navigator === "object" && (function (global, factory) {
         }, {
             key: 'toggleCaptions',
 
+=======
+            var done = function done() {
+                // Reset overflow (incase destroyed while in fullscreen)
+                document.body.style.overflow = '';
+
+                // GC for embed
+                _this2.embed = null;
+
+                // If it's a soft destroy, make minimal changes
+                if (soft) {
+                    if (Object.keys(_this2.elements).length) {
+                        // Remove elements
+                        utils.removeElement(_this2.elements.buttons.play);
+                        utils.removeElement(_this2.elements.captions);
+                        utils.removeElement(_this2.elements.controls);
+                        utils.removeElement(_this2.elements.wrapper);
+
+                        // Clear for GC
+                        _this2.elements.buttons.play = null;
+                        _this2.elements.captions = null;
+                        _this2.elements.controls = null;
+                        _this2.elements.wrapper = null;
+                    }
+
+                    // Callback
+                    if (utils.is.function(callback)) {
+                        callback();
+                    }
+                } else {
+                    // Unbind listeners
+                    _this2.listeners.clear();
+
+                    // Replace the container with the original element provided
+                    utils.replaceElement(_this2.elements.original, _this2.elements.container);
+
+                    // Event
+                    utils.dispatchEvent.call(_this2, _this2.elements.original, 'destroyed', true);
+
+                    // Callback
+                    if (utils.is.function(callback)) {
+                        callback.call(_this2.elements.original);
+                    }
+
+                    // Reset state
+                    _this2.ready = false;
+
+                    // Clear for garbage collection
+                    setTimeout(function () {
+                        _this2.elements = null;
+                        _this2.media = null;
+                    }, 200);
+                }
+            };
+>>>>>>> Stashed changes
 
             /**
              * Toggle captions
@@ -7962,6 +8946,7 @@ typeof navigator === "object" && (function (global, factory) {
                 } */
             }
 
+<<<<<<< Updated upstream
             /**
              * Get current loop state
              */
@@ -7969,6 +8954,10 @@ typeof navigator === "object" && (function (global, factory) {
             get: function get$$1() {
                 return Boolean(this.media.loop);
             }
+=======
+            ui.setPoster.call(this, input);
+        }
+>>>>>>> Stashed changes
 
             /**
              * Set new media source
@@ -8165,6 +9154,14 @@ typeof navigator === "object" && (function (global, factory) {
     Plyr.defaults = cloneDeep(defaults$1);
 
     return Plyr;
+<<<<<<< Updated upstream
+=======
+}();
+
+Plyr.defaults = utils.cloneDeep(defaults$1);
+
+return Plyr;
+>>>>>>> Stashed changes
 
 })));
 

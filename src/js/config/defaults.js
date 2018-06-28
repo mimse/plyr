@@ -146,6 +146,7 @@ const defaults = {
         'pip',
         'airplay',
         'fullscreen',
+        'live',
     ],
     settings: ['captions', 'quality', 'speed'],
 
@@ -192,6 +193,7 @@ const defaults = {
             576: 'SD',
             480: 'SD',
         },
+        live: 'Live',
     },
 
     // URLs

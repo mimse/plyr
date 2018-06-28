@@ -55,7 +55,7 @@ const paths = {
         },
 
         // Output paths
-        output: path.join(root, 'dist/'),
+        output: path.join(root, 'demo/dist/'),
     },
     demo: {
         // Source paths
